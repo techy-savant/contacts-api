@@ -1,5 +1,4 @@
-const asyncHandler = require("express-async-handler"); //eliminates need for trycatch block to catch exceptions, it determines when an error occurs and passes it to the errorHandler
-
+const asyncHandler = require("express-async-handler"); //handles async errors
 const Contact = require("../models/contactModel");
 
 //@desc Get all contacts
