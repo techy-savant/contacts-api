@@ -22,7 +22,13 @@ const createContact = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("All fields are required");
   }
-  res.status(201).json({ message: "Create Contact" });
+
+  const contact = await Contact.create({
+    name,
+    email,
+    phone,
+  });
+  res.status(201).json(contact);
 });
 
 //@desc GET a contact
@@ -30,7 +36,12 @@ const createContact = asyncHandler(async (req, res) => {
 //@access public
 
 const getContact = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: `Get  contact for ${req.params.id}` });
+  const contact = await Contact.findById(req.params.id);
+  if (!contact) {
+    res.status(404);
+    throw new Error("Contact not found");
+  }
+  res.status(200).json(contact);
 });
 
 //@desc UPDATE a contact
@@ -38,7 +49,21 @@ const getContact = asyncHandler(async (req, res) => {
 //@access public
 
 const updateContact = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: `Update contact for ${req.params.id}` });
+  //check if contact exists
+  const contact = await Contact.findById(req.params.id);
+  if (!contact) {
+    res.status(404);
+    throw new Error("Contact not found");
+  }
+
+  //find and update
+  const updatedContact = await Contact.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    { new: true }
+  );
+
+  res.status(200).json(updatedContact);
 });
 
 //@desc UPDATE a contact
@@ -46,7 +71,17 @@ const updateContact = asyncHandler(async (req, res) => {
 //@access public
 
 const deleteContact = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: `Delete contact for ${req.params.id}` });
+  //check if contact exists
+  const contact = await Contact.findById(req.params.id);
+  if (!contact) {
+    res.status(404);
+    throw new Error("Contact not found");
+  }
+
+  //find and delete
+  await Contact.findByIdAndDelete(req.params.id);
+
+  res.status(200).json({ message: 'Contact deleted successfully' });
 });
 
 module.exports = {
