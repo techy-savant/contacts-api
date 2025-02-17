@@ -6,10 +6,15 @@ const {
 } = require("../controllers/usersController");
 const router = express.Router();
 
-router.post("/register", registerUser);
+router.route("/register").post(registerUser);
 
-router.post("/login", loginUser);
+router.route("/login").post(loginUser);
 
-router.get("/current", currentUser);
+router.route("/current").get(currentUser);
+
+router.post('/test', (req, res) => {
+  const {user} = req.body;
+  res.json({ message: 'Test route working', user });
+});
 
 module.exports = router;
